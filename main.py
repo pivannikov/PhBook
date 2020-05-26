@@ -6,7 +6,7 @@ root.title('Phone book')
 root.geometry('500x250')
 root.iconbitmap('contacts.ico')
 
-
+# save to .txt
 def saveUsers():
     if not firstName.get():
         messagebox.showinfo('Warning!', 'Fill the Name field')
@@ -22,31 +22,33 @@ def saveUsers():
         lastName.delete(0, END)
         phoneNum.delete(0, END)
 
-    #root.withdraw() #hide window root
-    #labelNewUser.place_forget()
-    #root.deiconify() #show again window root after closing messagebox
-
-
+# interface add new user
 labelNewUser = LabelFrame(root,text="New contact:",font=('Arial', 10, 'bold'))
 def newUserAdd():
     root.geometry('500x300')
     labelNewUser.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
     labelShowUsers.place_forget()
 
-labelShowUsers = LabelFrame(text="All contacts:", font=('Arial', 10, 'bold'))
+# удаление выделенного элемента
+def delete():
+    selection = contactList.curselection()
+    # мы можем получить удаляемый элемент по индексу
+    # selected_language = languages_listbox.get(selection[0])
+    contactList.delete(selection[0])
+
+# interface show users
+labelShowUsers = LabelFrame(root, text="All contacts:", font=('Arial', 10, 'bold'))
+contactList = Listbox(labelShowUsers, height=40, width=110)
+btnDelete = Button(labelShowUsers, text="Delete", width=10, command=delete)
 def showUsers():
     root.geometry('500x500')
     labelNewUser.place_forget()
     labelShowUsers.place(x=250, y=240, anchor="c", height=470, width=450, bordermode=OUTSIDE)
+    contactList.place(x=10, y=25, height=390, width=425, bordermode=OUTSIDE)
+    btnDelete.place(x=190, y=410)
     with open('contacts.txt', 'r') as saveFile:
         for line in saveFile:
             contactList.insert(0, line)
-
-
-labelSuccessAdded = Label(root, text="Success added!")
-def showSuccessAdded():
-    labelNewUser.place_forget()
-    labelSuccessAdded.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
 
 
 # new contact
@@ -71,20 +73,13 @@ labelPhoneNum.grid(row=3, column=0)
 
 btnReg = Button(labelNewUser, text="Add", width=10, command=saveUsers)
 btnReg.grid(row=4, column=1, padx=0, pady=20)
+# end new contact
 
-# удаление выделенного элемента
-def delete():
-    selection = contactList.curselection()
-    # мы можем получить удаляемый элемент по индексу
-    # selected_language = languages_listbox.get(selection[0])
-    contactList.delete(selection[0])
+
+
 
 # создаем список
-contactList = Listbox(labelShowUsers, height=40, width=110)
-contactList.place()
 
-btnDelete = Button(labelShowUsers, text="Delete",width=10, command=delete)
-btnDelete.place(x=190, y=410)
 
 # menu
 mainMenu = Menu()
