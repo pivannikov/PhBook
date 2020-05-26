@@ -1,5 +1,4 @@
 from tkinter import *
-#from function_users import *
 from tkinter import messagebox
 
 root = Tk()
@@ -8,24 +7,24 @@ root.geometry('500x250')
 root.iconbitmap('contacts.ico')
 
 
-labelSuccessSave = Label(root,text="Great add!",font=('Arial', 10, 'bold'))
-# def successSave():
-#     labelSuccessSave.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
-
 def saveUsers():
-    with open('contacts.txt', 'a') as saveFile:
-        saveFile.write("\n" + firstName.get() + " " + lastName.get() + ", " + phoneNum.get())
-    #root.withdraw() #hide window root
-    #messagebox.showinfo('Status:', firstName.get() + " " + lastName.get() + "\nadded successfully!")
-    labelNewUser.place_forget()
-    labelSuccessSave.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
-    labelSuccessSave.after(3000, labelSuccessSave.place_forget())
-    labelNewUser.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
-    # firstName.delete(0, END) #clean fields
-    # lastName.delete(0, END)
-    # phoneNum.delete(0, END)
-    #root.deiconify() #show again window root after closing messagebox
+    if not firstName.get():
+        messagebox.showinfo('Warning!', 'Fill the Name field')
+    elif not lastName.get():
+        messagebox.showinfo('Warning!', 'Fill the Surname field')
+    elif not phoneNum.get():
+        messagebox.showinfo('Warning!', 'Fill the Phone field')
+    else:
+        with open('contacts.txt', 'a') as saveFile:
+            saveFile.write("\n" + firstName.get() + " " + lastName.get() + ", " + phoneNum.get())
+        messagebox.showinfo('Status:', firstName.get() + " " + lastName.get() + "\nadded successfully!")
+        firstName.delete(0, END)  # clean fields
+        lastName.delete(0, END)
+        phoneNum.delete(0, END)
 
+    #root.withdraw() #hide window root
+    #labelNewUser.place_forget()
+    #root.deiconify() #show again window root after closing messagebox
 
 
 labelNewUser = LabelFrame(root,text="New contact:",font=('Arial', 10, 'bold'))
@@ -39,9 +38,16 @@ def showUsers():
     root.geometry('500x500')
     labelNewUser.place_forget()
     labelShowUsers.place(x=250, y=240, anchor="c", height=470, width=450, bordermode=OUTSIDE)
-    with open('users.txt', 'r') as saveFile:
+    with open('contacts.txt', 'r') as saveFile:
         for line in saveFile:
             contactList.insert(0, line)
+
+
+labelSuccessAdded = Label(root, text="Success added!")
+def showSuccessAdded():
+    labelNewUser.place_forget()
+    labelSuccessAdded.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
+
 
 # new contact
 firstName = StringVar()
