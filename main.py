@@ -3,8 +3,23 @@ from tkinter import messagebox
 
 root = Tk()
 root.title('Phone book')
-root.geometry('500x250')
+root.geometry('500x200')
 root.iconbitmap('contacts.ico')
+
+labelStart = LabelFrame(root, bd=0)
+labelStart.place(x=250, y=110, anchor="c", height=200, width=470, bordermode=OUTSIDE)
+for r in [1, 4, 7]:
+    for c in range(3):
+        btnStart = Button(labelStart, text=r+c, bd=3)
+        btnStart.grid(row=r, column=c, ipadx=10, ipady=6, padx=5, pady=5)
+
+labelStartDesc = Label(labelStart,font="Arial 12",
+                       text="New - create a new contact\nView all - show all contacts\nExit - close the Book           ",
+                       padx=20)
+labelStartDesc.place(x=280, y=35, anchor="c", height=150, width=200, bordermode=OUTSIDE)
+
+
+
 
 # save to .txt
 def saveUsers():
@@ -26,34 +41,30 @@ def saveUsers():
 labelNewUser = LabelFrame(root,text="New contact:",font=('Arial', 10, 'bold'))
 def newUserAdd():
     root.geometry('500x300')
+    labelStart.place_forget()
     labelNewUser.place(relx=.5, rely=.4, anchor="c", height=200, width=450, bordermode=OUTSIDE)
     labelShowUsers.place_forget()
 
-# удаление выделенного элемента
+# delete selected element
 def delete():
     selection = contactList.curselection()
-    # мы можем получить удаляемый элемент по индексу
-    # selected_language = languages_listbox.get(selection[0])
     contactList.delete(selection[0])
-
     with open('contacts.txt', 'w') as file:
         for item in contactList.get(0, contactList.size()):
             file.write(item + "\n")
 
 
-
 # interface show users
 labelShowUsers = LabelFrame(root, text="All contacts:", font=('Arial', 10, 'bold'))
-contactList = Listbox(labelShowUsers, height=40, width=110)
+contactList = Listbox(labelShowUsers, height=40, width=110, font="Arial 12")
 btnDelete = Button(labelShowUsers, text="Delete", width=10, command=delete)
 def showUsers():
     root.geometry('500x500')
     labelNewUser.place_forget()
+    labelStart.place_forget()
     labelShowUsers.place(x=250, y=240, anchor="c", height=470, width=450, bordermode=OUTSIDE)
     contactList.place(x=10, y=25, height=390, width=425, bordermode=OUTSIDE)
     btnDelete.place(x=190, y=410)
-
-
     with open('contacts.txt', 'r') as saveFile:
         contactList.delete(0, contactList.size())
         content = saveFile.readlines()
@@ -86,12 +97,10 @@ btnReg = Button(labelNewUser, text="Add", width=10, command=saveUsers)
 btnReg.grid(row=4, column=1, padx=0, pady=20)
 # end new contact
 
-
 # menu
 mainMenu = Menu()
 mainMenu.add_cascade(label='New', command=newUserAdd)
 mainMenu.add_cascade(label='View all', command=showUsers)
-mainMenu.add_cascade(label='Edit')
 mainMenu.add_cascade(label='Exit', command=root.quit, font=("Verdana", 8, 'bold'))
 
 root.config(menu=mainMenu)
