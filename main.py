@@ -16,7 +16,7 @@ def saveUsers():
         messagebox.showinfo('Warning!', 'Fill the Phone field')
     else:
         with open('contacts.txt', 'a') as saveFile:
-            saveFile.write("\n" + firstName.get() + " " + lastName.get() + ", " + phoneNum.get())
+            saveFile.write(firstName.get() + " " + lastName.get() + ", " + phoneNum.get() + "\n")
         messagebox.showinfo('Status:', firstName.get() + " " + lastName.get() + "\nadded successfully!")
         firstName.delete(0, END)  # clean fields
         lastName.delete(0, END)
@@ -36,6 +36,12 @@ def delete():
     # selected_language = languages_listbox.get(selection[0])
     contactList.delete(selection[0])
 
+    with open('contacts.txt', 'w') as file:
+        for item in contactList.get(0, contactList.size()):
+            file.write(item + "\n")
+
+
+
 # interface show users
 labelShowUsers = LabelFrame(root, text="All contacts:", font=('Arial', 10, 'bold'))
 contactList = Listbox(labelShowUsers, height=40, width=110)
@@ -46,8 +52,13 @@ def showUsers():
     labelShowUsers.place(x=250, y=240, anchor="c", height=470, width=450, bordermode=OUTSIDE)
     contactList.place(x=10, y=25, height=390, width=425, bordermode=OUTSIDE)
     btnDelete.place(x=190, y=410)
+
+
     with open('contacts.txt', 'r') as saveFile:
-        for line in saveFile:
+        contactList.delete(0, contactList.size())
+        content = saveFile.readlines()
+        content.reverse()
+        for line in content:
             contactList.insert(0, line)
 
 
@@ -74,11 +85,6 @@ labelPhoneNum.grid(row=3, column=0)
 btnReg = Button(labelNewUser, text="Add", width=10, command=saveUsers)
 btnReg.grid(row=4, column=1, padx=0, pady=20)
 # end new contact
-
-
-
-
-# создаем список
 
 
 # menu
